@@ -2,23 +2,69 @@ FOCUS FLOW — versión portable
 Medí tu concentración, no sólo tus horas
 
 
+PRIMERO: DESBLOQUEAR EL ARCHIVO
+
+Windows le pone una marca invisible a todo lo que viene de internet, y por esa
+marca desconfía de cualquier programa que no venga de una empresa grande. Sacarla
+lleva cinco segundos y evita todos los problemas de más abajo.
+
+Hacelo ANTES de descomprimir, sobre el .zip:
+
+  1. Clic derecho sobre el archivo .zip
+  2. Propiedades
+  3. Abajo de todo, donde dice "Seguridad", tildar "Desbloquear"
+  4. Aplicar y Aceptar
+
+Recién ahí descomprimí. Si descomprimís primero, la marca pasa a cada archivo de
+adentro y hay que repetirlo uno por uno.
+
+Si preferís la consola, con PowerShell en la carpeta donde está el zip:
+
+  Unblock-File ".\Focus Flow 1.1.0 portable.zip"
+
+
 CÓMO SE USA
 
 Descomprimí la carpeta donde quieras y abrí "Focus Flow.exe". No hay nada que
-instalar: las tipografías y los sonidos van adentro del ejecutable.
+instalar: los sonidos van adentro del programa.
 
 Importante: descomprimí la carpeta ANTES de abrir el programa. Si lo ejecutás
 directo desde adentro del .zip, Windows lo abre en una carpeta temporal y tu
 historial se pierde cuando la cierra.
 
 
-LA PRIMERA VEZ, WINDOWS VA A DESCONFIAR
+SI IGUAL APARECE "WINDOWS PROTEGIÓ TU PC"
 
-Va a aparecer una pantalla azul que dice "Windows protegió tu PC". Es lo que
-Windows hace con cualquier programa que no venga de una empresa que le pagó a
-Microsoft por una firma digital, y no dice nada sobre el programa en sí.
+Es una pantalla azul. El programa sigue estando, sólo que Windows no lo deja
+arrancar de una.
 
-Para abrirlo: "Más información" y después "Ejecutar de todas formas".
+Pasa porque el ejecutable no tiene firma digital. Firmarlo cuesta varios cientos
+de dólares por año, así que cualquier programa hecho por una persona y no por una
+empresa muestra este cartel. No dice nada sobre el programa en sí.
+
+Para abrirlo:
+
+  1. Hacer clic en "Más información"
+     (es un texto chico y gris, arriba del botón "No ejecutar" — cuesta verlo)
+  2. Aparece el botón "Ejecutar de todas formas"
+  3. Listo. Se pregunta una sola vez.
+
+
+SI EL ARCHIVO DESAPARECE SOLO
+
+Eso no es la pantalla azul, es el antivirus poniéndolo en cuarentena. Es un falso
+positivo conocido: los programas hechos en Python se empaquetan de una forma que
+algunos antivirus confunden con la de un virus.
+
+Para recuperarlo, en Seguridad de Windows:
+
+  1. Abrir "Seguridad de Windows" desde el menú Inicio
+  2. Protección antivirus y contra amenazas
+  3. Historial de protección
+  4. Buscar Focus Flow en la lista y elegir "Permitir en el dispositivo"
+
+Si preferís no tocar nada del antivirus, avisame y te paso la versión que corre
+desde el código, que no tiene este problema.
 
 
 DÓNDE QUEDA TU HISTORIAL
@@ -29,8 +75,10 @@ En esta misma carpeta, junto al programa. Eso lo decide el archivo
 Podés copiar la carpeta entera a un pendrive o a otra computadora y tu historial
 viaja con ella.
 
-Para actualizar a una versión nueva: reemplazá "Focus Flow.exe" por el nuevo y
-listo. El historial no se toca.
+Para actualizar a una versión nueva: reemplazá el programa por el nuevo y listo.
+El historial no se toca.
+
+Nada sale de tu computadora: no hay cuentas, ni servidores, ni telemetría.
 
 
 LOS ATAJOS
@@ -46,4 +94,4 @@ SI PREFERÍS INSTALARLO
 
 Hay una versión con instalador, que agrega el acceso directo en el menú Inicio y
 se actualiza sola encima de la anterior. Esa guarda el historial en tu usuario de
-Windows y no en la carpeta del programa.
+Windows y no en la carpeta del programa. No pide permisos de administrador.

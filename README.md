@@ -28,10 +28,8 @@ python "Focus Flow.py"
 **Compilado:** en la pestaña [Releases](../../releases) están el instalador y la
 versión portable, las dos salidas del mismo `.exe`. No hace falta Python.
 
-La primera vez, Windows va a mostrar *"Windows protegió tu PC"*, porque el
-ejecutable no está firmado digitalmente. Se abre con **Más información →
-Ejecutar de todas formas**. Firmarlo requiere comprar un certificado; no hay
-forma gratuita.
+La primera vez Windows va a desconfiar, porque el ejecutable no está firmado
+digitalmente. Ver [Windows no me deja abrirlo](#windows-no-me-deja-abrirlo).
 
 ## Los atajos
 
@@ -347,8 +345,16 @@ pip install pyinstaller
 ```
 
 ```bash
-python -m PyInstaller --noconfirm --clean --onefile --windowed --name "Focus Flow" --icon focusflow.ico --add-data "assets;assets" --collect-data customtkinter --hidden-import PIL._tkinter_finder --hidden-import _miniaudio --hidden-import _cffi_backend "Focus Flow.py"
+python -m PyInstaller --noconfirm --clean --onedir --windowed --name "Focus Flow" --icon focusflow.ico --add-data "assets;assets" --collect-data customtkinter --hidden-import PIL._tkinter_finder --hidden-import _miniaudio --hidden-import _cffi_backend "Focus Flow.py"
 ```
+
+**Por qué `--onedir` y no `--onefile`.** Un `--onefile` se autodescomprime en una
+carpeta temporal al arrancar, que es exactamente el patrón que usan los
+empaquetadores de malware: varios antivirus lo marcan como falso positivo y lo
+mandan a cuarentena sin mirar más. Con `--onedir` eso casi no pasa, y además
+arranca bastante más rápido. A cambio queda una carpeta en vez de un archivo
+suelto, que para distribuir da igual porque va adentro del `.zip` o del
+instalador.
 
 Tres de esos argumentos no son opcionales y cuestan encontrarlos:
 
@@ -361,11 +367,14 @@ Tres de esos argumentos no son opcionales y cuestan encontrarlos:
   se queda mudo y cae al respaldo con `winsound`, que es justo lo que se quería
   evitar.
 
-Con `--onedir` en vez de `--onefile` arranca bastante más rápido, a cambio de ser
-una carpeta en lugar de un solo archivo.
-
 **El instalador** se arma con [Inno Setup](https://jrsoftware.org/isinfo.php)
-(`winget install JRSoftware.InnoSetup`) a partir de `installer.iss`. La
+(`winget install JRSoftware.InnoSetup`) a partir de `installer.iss`:
+
+```bash
+ISCC.exe /DOneDir /DAppVersion=1.1.0 /DSourceDir=. /DOutputDir=.\entregas installer.iss
+```
+
+Sin `/DOneDir` empaqueta el `.exe` suelto de un build `--onefile`. La
 instalación es por usuario a propósito: no pide contraseña de administrador, que
 es la diferencia entre "doble clic y listo" y "pedile permiso a quien te prestó
 la computadora".
@@ -400,6 +409,50 @@ corresponda.
 
 Ninguno de los dos está en este repositorio: se crean solos la primera vez que
 abrís el programa.
+
+## Windows no me deja abrirlo
+
+Son dos problemas distintos que se ven parecido.
+
+### Pantalla azul: "Windows protegió tu PC"
+
+El archivo sigue estando; Windows sólo no lo deja arrancar de una. Pasa con
+cualquier ejecutable sin firma digital y no dice nada sobre el programa.
+
+Lo más limpio no es "ejecutar de todas formas", sino **quitarle la marca de
+origen**: Windows le pega un atributo invisible (*Mark of the Web*) a todo lo que
+se descarga, y es eso lo que dispara el aviso.
+
+**Clic derecho → Propiedades → tildar "Desbloquear" abajo de todo → Aplicar.**
+O por consola:
+
+```bash
+Unblock-File "Focus Flow.exe"
+```
+
+Si bajaste el `.zip`, desbloqueá **el zip antes de descomprimir**: la marca se
+propaga a cada archivo que sale adentro.
+
+Si preferís el otro camino: **Más información → Ejecutar de todas formas**. El
+enlace "Más información" es texto gris chico arriba del botón, cuesta verlo.
+
+### El archivo desaparece solo
+
+Eso no es SmartScreen, es el antivirus poniéndolo en cuarentena, y casi siempre
+es un falso positivo de PyInstaller. Por eso las compilaciones de este repo van
+con `--onedir`.
+
+Para recuperarlo: **Seguridad de Windows → Protección antivirus y contra
+amenazas → Historial de protección → Permitir en el dispositivo.**
+
+### La solución de fondo
+
+Firmar el ejecutable. Un certificado OV cuesta 200–400 USD al año y sólo reduce
+el aviso hasta que el archivo acumule reputación; uno EV cuesta más y la da desde
+el día uno. Azure Trusted Signing es bastante más barato pero tiene requisitos de
+elegibilidad. La opción más razonable para un proyecto personal es publicarlo en
+la Microsoft Store: la cuenta de desarrollador individual es un pago único y
+Microsoft firma por vos.
 
 ## Créditos y licencias
 

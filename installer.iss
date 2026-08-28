@@ -62,10 +62,17 @@ Name: "desktopicon"; Description: "Crear un acceso directo en el escritorio"; \
     GroupDescription: "Accesos directos:"
 
 [Files]
-; Un solo archivo: las tipografías y los sonidos viajan adentro del ejecutable.
 ; Ojo con agregar acá `portable.txt`: eso mandaría el historial a la carpeta de
 ; instalación, que es justo la que se borra al desinstalar.
+;
+; Con --onedir PyInstaller deja una carpeta "Focus Flow" con el .exe y su
+; _internal al lado; con --onefile deja el .exe suelto. Compilar con:
+;     ISCC.exe /DOneDir /DAppVersion=1.1.0 /DSourceDir=. installer.iss
+#ifdef OneDir
+Source: "{#SourceDir}\{#AppName}\*"; DestDir: "{app}";     Flags: ignoreversion recursesubdirs createallsubdirs
+#else
 Source: "{#SourceDir}\{#AppExe}"; DestDir: "{app}"; Flags: ignoreversion
+#endif
 
 [Icons]
 Name: "{group}\{#AppName}"; Filename: "{app}\{#AppExe}"
