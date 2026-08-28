@@ -1,0 +1,49 @@
+FOCUS FLOW — versión portable
+Medí tu concentración, no sólo tus horas
+
+
+CÓMO SE USA
+
+Descomprimí la carpeta donde quieras y abrí "Focus Flow.exe". No hay nada que
+instalar: las tipografías y los sonidos van adentro del ejecutable.
+
+Importante: descomprimí la carpeta ANTES de abrir el programa. Si lo ejecutás
+directo desde adentro del .zip, Windows lo abre en una carpeta temporal y tu
+historial se pierde cuando la cierra.
+
+
+LA PRIMERA VEZ, WINDOWS VA A DESCONFIAR
+
+Va a aparecer una pantalla azul que dice "Windows protegió tu PC". Es lo que
+Windows hace con cualquier programa que no venga de una empresa que le pagó a
+Microsoft por una firma digital, y no dice nada sobre el programa en sí.
+
+Para abrirlo: "Más información" y después "Ejecutar de todas formas".
+
+
+DÓNDE QUEDA TU HISTORIAL
+
+En esta misma carpeta, junto al programa. Eso lo decide el archivo
+"portable.txt": mientras esté ahí, todo se guarda acá.
+
+Podés copiar la carpeta entera a un pendrive o a otra computadora y tu historial
+viaja con ella.
+
+Para actualizar a una versión nueva: reemplazá "Focus Flow.exe" por el nuevo y
+listo. El historial no se toca.
+
+
+LOS ATAJOS
+
+  F8    cortar por distracción (el bloque se reinicia al volver)
+  F9    volver a concentrarse
+  F10   pausa corta (algo puntual, sin perder el bloque)
+
+Funcionan aunque la ventana esté atrás.
+
+
+SI PREFERÍS INSTALARLO
+
+Hay una versión con instalador, que agrega el acceso directo en el menú Inicio y
+se actualiza sola encima de la anterior. Esa guarda el historial en tu usuario de
+Windows y no en la carpeta del programa.

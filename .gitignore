@@ -1,0 +1,27 @@
+# --- Datos personales: la base con tu historial de sesiones ---
+focusflow.db
+*.db-journal
+
+# --- Estado de ejecucion por usuario ---
+settings.json
+
+# --- Binarios compilados: van a Releases, no al repositorio ---
+*.exe
+entregas/
+build/
+dist/
+*.spec
+
+# --- Tipografias propietarias de Apple (ver CREDITS.md) ---
+assets/*.otf
+
+# --- Python ---
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# --- Sistema ---
+Thumbs.db
+desktop.ini
+.DS_Store

@@ -1,0 +1,10 @@
+Este archivo hace que Focus Flow guarde todo en esta misma carpeta.
+
+Mientras esté acá al lado del programa, el historial, los ajustes y la sesión a
+medio terminar se escriben en esta carpeta y no en tu usuario de Windows. Podés
+copiar la carpeta entera a un pendrive o a otra computadora y tu historial va
+adentro.
+
+Si lo borrás, Focus Flow pasa a guardar en la carpeta del usuario
+(%LOCALAPPDATA%\Focus Flow) la próxima vez que lo abras, y se lleva ahí lo que
+haya en esta carpeta. Los archivos de acá no se borran: quedan como respaldo.
