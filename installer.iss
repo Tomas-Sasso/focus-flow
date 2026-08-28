@@ -19,6 +19,11 @@
 #ifndef OutputDir
   #define OutputDir "entregas"
 #endif
+; SourceDir es la raiz del proyecto (de ahi sale el icono). DistDir es donde
+; PyInstaller deja el resultado: con --onedir eso es "dist", no la raiz.
+#ifndef DistDir
+  #define DistDir SourceDir
+#endif
 
 #define AppName "Focus Flow"
 #define AppExe "Focus Flow.exe"
@@ -65,13 +70,13 @@ Name: "desktopicon"; Description: "Crear un acceso directo en el escritorio"; \
 ; Ojo con agregar acá `portable.txt`: eso mandaría el historial a la carpeta de
 ; instalación, que es justo la que se borra al desinstalar.
 ;
-; Con --onedir PyInstaller deja una carpeta "Focus Flow" con el .exe y su
-; _internal al lado; con --onefile deja el .exe suelto. Compilar con:
-;     ISCC.exe /DOneDir /DAppVersion=1.1.0 /DSourceDir=. installer.iss
+; Con --onedir PyInstaller deja en DistDir una carpeta "Focus Flow" con el .exe
+; y su _internal al lado; con --onefile deja el .exe suelto. Compilar con:
+;     ISCC.exe /DOneDir /DDistDir=dist /DAppVersion=1.1.0 installer.iss
 #ifdef OneDir
-Source: "{#SourceDir}\{#AppName}\*"; DestDir: "{app}";     Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "{#DistDir}\{#AppName}\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 #else
-Source: "{#SourceDir}\{#AppExe}"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#DistDir}\{#AppExe}"; DestDir: "{app}"; Flags: ignoreversion
 #endif
 
 [Icons]
