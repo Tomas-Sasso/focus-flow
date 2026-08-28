@@ -371,10 +371,12 @@ Tres de esos argumentos no son opcionales y cuestan encontrarlos:
 (`winget install JRSoftware.InnoSetup`) a partir de `installer.iss`:
 
 ```bash
-ISCC.exe /DOneDir /DAppVersion=1.1.0 /DSourceDir=. /DOutputDir=.\entregas installer.iss
+ISCC.exe /DOneDir /DAppVersion=1.1.0 /DSourceDir=dist /DOutputDir=.\entregas installer.iss
 ```
 
-Sin `/DOneDir` empaqueta el `.exe` suelto de un build `--onefile`. La
+`SourceDir` apunta a `dist` porque ahí es donde PyInstaller deja la carpeta
+`Focus Flow\` con el `.exe` y su `_internal`. Sin `/DOneDir` empaqueta el `.exe`
+suelto de un build `--onefile`. La
 instalación es por usuario a propósito: no pide contraseña de administrador, que
 es la diferencia entre "doble clic y listo" y "pedile permiso a quien te prestó
 la computadora".
