@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from datetime import date, timedelta
 
+import numpy as np
 from PIL import Image, ImageDraw
 
 from .. import render as R
@@ -185,8 +186,10 @@ class GoalRing(PILCanvas):
         side = max(80, min(width, height, int(self.max_size * scaling_of(self))))
         # Margen para que el resplandor del arco no se corte en los bordes.
         pad = max(3, int(side * 0.055 * 1.6))
+        # Luz ambiente del color de la fase detrás del anillo (como en la maqueta):
+        # se apaga del todo antes del borde, así empalma con la tarjeta sin costura.
         image = R.progress_ring(side, self.fraction, self.color, COLORS["surface2"],
-                                self.background, thickness=0.055 * side / (side - 2 * pad),
+                                _phase_glow(side, self.background, self.color), thickness=0.055 * side / (side - 2 * pad),
                                 padding=pad, glow=0.2)
         ox, oy = (width - side) // 2, (height - side) // 2
         if (width, height) != (side, side):
@@ -533,3 +536,27 @@ def _split_in_two(text):
         return [text]
     cut = min(spaces, key=lambda i: abs(i - len(text) / 2))
     return [text[:cut], text[cut + 1:]]
+
+
+_GLOW_CACHE = {}
+
+
+def _phase_glow(side, background, color, strength=0.14):
+    """Fondo `side`x`side` con un lavado radial de `color` que llega a cero en el borde."""
+    key = (side, background, color, strength)
+    cached = _GLOW_CACHE.get(key)
+    if cached is not None:
+        return cached
+    yy, xx = np.mgrid[0:side, 0:side].astype(np.float32)
+    r = np.hypot(xx - (side - 1) / 2.0, yy - (side - 1) / 2.0) / (side / 2.0)
+    t = np.clip(1.0 - r, 0.0, 1.0)
+    alpha = (strength * t * t * (3.0 - 2.0 * t))[..., None]
+    base = np.array(R.hex_to_rgb(background), np.float32)
+    tint = np.array(R.hex_to_rgb(color), np.float32)
+    out = (base + (tint - base) * alpha).astype(np.uint8)
+    out.setflags(write=False)
+    if len(_GLOW_CACHE) > 16:
+        _GLOW_CACHE.clear()
+    _GLOW_CACHE[key] = out
+    return out
+

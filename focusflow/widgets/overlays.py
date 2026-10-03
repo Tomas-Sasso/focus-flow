@@ -251,8 +251,8 @@ class HashtagPopup:
         top = tk.Toplevel(self.root)
         top.overrideredirect(True)
         top.attributes("-topmost", True)
-        top.configure(bg=COLORS["pink"])
-        canvas = tk.Canvas(top, highlightthickness=0, bd=0, bg=COLORS["pink"])
+        top.configure(bg=COLORS["surface3"])
+        canvas = tk.Canvas(top, highlightthickness=0, bd=0, bg=COLORS["surface3"])
         canvas.pack()
         canvas.bind("<Button-1>", self._on_click)
         canvas.bind("<MouseWheel>", self._on_wheel)
@@ -354,7 +354,7 @@ class HashtagPopup:
         if self.canvas is None:
             return
         height = self._height()
-        image = R.rounded_panel(self.WIDTH, height, 12, COLORS["pink"], COLORS["pink"])
+        image = R.rounded_panel(self.WIDTH, height, 12, COLORS["surface3"], COLORS["surface3"])
         draw = ImageDraw.Draw(image)
         font = R.load_font(self.fonts.paths, 13)
         font_bold = R.load_font(self.fonts.paths_bold, 13)
@@ -367,16 +367,16 @@ class HashtagPopup:
             selected = position == self.index
             if selected:
                 image.paste(R.rounded_panel(self.WIDTH - 12, self.ROW - 4, 8,
-                                            COLORS["pink"],
-                                            R.darken(COLORS["pink"], 0.1)), (6, y + 2))
+                                            COLORS["surface3"],
+                                            COLORS["accent_soft"]), (6, y + 2))
             draw.text((16, y + self.ROW / 2), f"#{self.suggestions[position]}",
                       font=font_bold if selected else font, anchor="lm",
-                      fill=R.hex_to_rgb(COLORS["pink_text"]))
+                      fill=R.hex_to_rgb(COLORS["text"]))
 
         if len(self.suggestions) > self._rows():
             draw.text((self.WIDTH - 14, height - 8),
                       f"{self.index + 1}/{len(self.suggestions)}", font=font, anchor="rs",
-                      fill=R.hex_to_rgb(R.mix(COLORS["pink_text"], COLORS["pink"], 0.45)))
+                      fill=R.hex_to_rgb(R.mix(COLORS["text"], COLORS["surface3"], 0.45)))
 
         self.photo = ImageTk.PhotoImage(image)
         self.canvas.delete("all")

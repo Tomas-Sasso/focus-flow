@@ -333,7 +333,7 @@ class InsightsView(ctk.CTkFrame):
             head = ctk.CTkFrame(row, fg_color="transparent")
             head.pack(fill="x")
             ctk.CTkLabel(head, text=f"#{tag}", font=self.fonts["small_bold"],
-                         text_color=COLORS["pink"]).pack(side="left")
+                         text_color=COLORS["lavender"]).pack(side="left")
             ctk.CTkLabel(head,
                          text=f"{W.fmt_hours(focus)} · {percentage:.0f}% · "
                               f"{count} {'sesión' if count == 1 else 'sesiones'}",

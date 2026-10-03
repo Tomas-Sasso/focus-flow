@@ -23,6 +23,11 @@ class Card(ctk.CTkFrame):
     def __init__(self, master, fill=None, radius=None, **kwargs):
         kwargs.setdefault("fg_color", fill or COLORS["surface"])
         kwargs.setdefault("corner_radius", radius or RADIUS["lg"])
+        # Filo de 1 px apenas más claro que la tarjeta: la separa del fondo como una
+        # superficie elevada, sin necesidad de sombra.
+        if isinstance(kwargs["fg_color"], str) and kwargs["fg_color"].startswith("#"):
+            kwargs.setdefault("border_width", 1)
+            kwargs.setdefault("border_color", R.mix(kwargs["fg_color"], "#FFFFFF", 0.07))
         super().__init__(master, **kwargs)
 
 

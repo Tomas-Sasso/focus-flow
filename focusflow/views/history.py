@@ -211,7 +211,7 @@ class HistoryView(ctk.CTkFrame):
             tag_row.pack(fill="x", pady=(SPACE["sm"], 0))
             for tag in tags[:8]:
                 ctk.CTkLabel(tag_row, text=f"#{tag}", font=self.fonts["tiny_bold"],
-                             text_color=COLORS["pink_text"], fg_color=COLORS["pink"],
+                             text_color=COLORS["lavender"], fg_color=COLORS["lavender_soft"],
                              corner_radius=8, height=20).pack(side="left",
                                                               padx=(0, SPACE["xs"]))
         ctk.CTkFrame(body, fg_color="transparent", height=SPACE["md"]).pack()
@@ -254,7 +254,7 @@ class HistoryView(ctk.CTkFrame):
                      "Borrar sesión",
                      f'«{row["title"] or "Sesión"}» se borra para siempre.',
                      "Borrar", lambda: self._delete(row["id"]), tone="rose"),
-                 tone="quiet", font=self.fonts["button"], height=30, width=88).pack()
+                 tone="destructive", font=self.fonts["button"], height=30, width=88).pack()
 
     def _delete(self, session_id):
         self.db.delete_session(session_id)
