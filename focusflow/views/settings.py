@@ -5,7 +5,7 @@ from __future__ import annotations
 import customtkinter as ctk
 
 from .. import widgets as W
-from ..config import PRESETS
+from ..config import DB_PATH, PRESETS
 from ..theme import COLORS, RADIUS, SPACE
 
 
@@ -68,13 +68,20 @@ class SettingsView(ctk.CTkFrame):
                      font=self.fonts["small"], text_color=COLORS["text_dim"],
                      wraplength=420, justify="left").pack(anchor="w", padx=SPACE["xl"])
 
+        # En grilla de tres columnas y no en una fila: con cinco ritmos, a
+        # 1280x800 los últimos ("Arranque suave", "Sin bloques") quedaban afuera.
         presets = ctk.CTkFrame(card, fg_color="transparent")
         presets.pack(fill="x", padx=SPACE["xl"], pady=(SPACE["md"], 0))
+        columns = 3
+        presets.grid_columnconfigure(tuple(range(columns)), weight=1, uniform="preset")
         for index, preset in enumerate(PRESETS):
+            row, column = divmod(index, columns)
             W.button(presets, self.animator, preset["name"],
                      lambda p=preset: self._apply_preset(p), tone="quiet",
-                     font=self.fonts["button"], height=30).pack(
-                side="left", padx=(0, SPACE["xs"]) if index < len(PRESETS) - 1 else 0)
+                     font=self.fonts["button"], height=30).grid(
+                row=row, column=column, sticky="ew",
+                padx=(0, SPACE["xs"]) if column < columns - 1 else 0,
+                pady=(0, SPACE["xs"]))
 
         self.focus_entry = self._field(card, "Concentración (minutos)")
         self.break_entry = self._field(card, "Descanso (minutos)")
@@ -167,8 +174,10 @@ class SettingsView(ctk.CTkFrame):
             row=0, column=1, sticky="ew", padx=(SPACE["xs"], 0))
 
         ctk.CTkLabel(card,
-                     text="La base es un archivo SQLite (focusflow.db) al lado del "
-                          "programa. Copialo y tenés todo tu historial.",
+                     # La ruta real: según config._resolve_data_dir puede estar al
+                     # lado del programa o en %LOCALAPPDATA%\Focus Flow.
+                     text=f"Tu historial es un único archivo: {DB_PATH}. "
+                          "Copialo y te llevás todo.",
                      font=self.fonts["tiny"], text_color=COLORS["text_faint"],
                      wraplength=420, justify="left").pack(
             anchor="w", padx=SPACE["xl"], pady=(0, SPACE["lg"]))

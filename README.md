@@ -257,15 +257,20 @@ make_sounds.py           genera y nivela los sonidos de assets/
 originales/              las grabaciones sin procesar, fuente de make_sounds.py
 installer.iss            script del instalador (Inno Setup)
 empaque/                 lo que acompaña al .zip portable
-assets/                  los sonidos (las tipografías no se distribuyen, ver más abajo)
+assets/                  los sonidos
+  fonts/                 Inter 4.1 (licencia OFL), la tipografía empaquetada
+docs/rediseno/           especificación, contratos, plan y maquetas del rediseño Liquid Glass
 focusflow/
   engine.py              máquina de estados de la sesión — sin Tk, se testea sola
   db.py                  esquema SQLite, consultas e importador del programa viejo
   stats.py               análisis (rachas, mapas, perfiles horarios, CSV)
-  render.py              dibujo antialiaseado con numpy
-  anim.py                motor de animación y curvas de aceleración
-  widgets.py             widgets propios
-  theme.py               paleta, tipografía, espaciado
+  render.py              dibujo antialiaseado con numpy: gráficos, fondo ambiental, vidrio, sombras
+  anim.py                motor de animación: resortes interrumpibles y curvas
+  widgets/               widgets propios, un módulo por familia
+  icons.py               íconos propios al estilo SF Symbols
+  frameless.py           ventanas sin marco (avisos, menús, pestaña flotante)
+  theme.py               paleta, tipografía, espaciado, materiales
+  a11y.py                ajustes de accesibilidad de Windows (animación, transparencia, contraste)
   config.py              preferencias persistentes y presets
   system.py              sonido y vigilante de ventana activa
   app.py                 ventana principal
@@ -463,5 +468,10 @@ Microsoft firma por vos.
 ## Créditos y licencias
 
 Ver [CREDITS.md](CREDITS.md) para las tipografías y los sonidos.
+
+**Tipografía.** La app usa SF Pro si encuentra sus archivos en `assets/` (la descarga de
+Apple, sólo en tu computadora: su licencia no permite redistribuirla y el `.gitignore` la
+excluye). Si no está, usa Inter, que viene incluida. Ojo: si compilás el ejecutable con SF
+Pro en `assets/`, queda adentro del `.exe`; para repartirlo, compilá sin ella.
 
 El código es MIT — ver [LICENSE](LICENSE).
