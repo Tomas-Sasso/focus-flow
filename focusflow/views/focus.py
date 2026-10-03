@@ -16,7 +16,7 @@ import customtkinter as ctk
 from .. import engine as E
 from .. import stats
 from .. import widgets as W
-from ..theme import COLORS, DATA, PHASE_STYLE, RADIUS, SPACE
+from ..theme import COLORS, DATA, PHASE_STYLE, SPACE
 
 # Qué hace el botón grande en cada estado: (texto, tono, ayuda).
 # El rojo queda reservado para "Terminar sesión", que es lo irreversible; pausar
@@ -117,8 +117,7 @@ class FocusView(ctk.CTkFrame):
 
         self.primary_button = W.button(
             card, self.animator, "Comenzar sesión", self.app.on_primary,
-            tone="accent", font=self.fonts["button_lg"], height=50,
-            corner_radius=RADIUS["sm"])
+            tone="accent", font=self.fonts["button_lg"], height=50)
         self.primary_button.grid(row=0, column=0, sticky="ew", padx=SPACE["xl"],
                                  pady=(SPACE["lg"], SPACE["sm"]))
 
@@ -207,8 +206,8 @@ class FocusView(ctk.CTkFrame):
                      text_color=COLORS["text"]).pack(side="left")
         # El objetivo se cambia desde acá mismo, que es donde se lo mira.
         W.button(header, self.animator, "Cambiar", self.app.show_goal_dialog,
-                 tone="quiet", font=self.fonts["button"], height=26, width=84,
-                 corner_radius=RADIUS["xs"]).pack(side="right")
+                 tone="quiet", font=self.fonts["button"], height=26,
+                 width=84).pack(side="right")
         self.goal_label = ctk.CTkLabel(header, text="", font=self.fonts["tiny"],
                                        text_color=COLORS["text_dim"])
         self.goal_label.pack(side="right", padx=(0, SPACE["md"]), pady=(4, 0))
