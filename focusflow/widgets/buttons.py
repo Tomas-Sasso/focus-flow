@@ -120,6 +120,9 @@ TONES = {
     "ghost": ("surface3", "surface4", "text"),
     "quiet": ("surface2", "surface3", "text"),
     "danger": ("danger", "danger_hover", "text"),
+    # Destructivo a la manera de Apple: cápsula neutra con el texto en rosa, en vez
+    # de un rojo lleno (que además daba texto blanco sobre rojo, con poco contraste).
+    "destructive": ("surface2", "surface3", "rose"),
     "orange": ("orange", "orange_hover", "app"),
     "yellow": ("yellow", "yellow_hover", "app"),
 }

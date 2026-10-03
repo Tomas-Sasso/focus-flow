@@ -82,11 +82,11 @@ class FocusView(ctk.CTkFrame):
 
         # "Terminar" vive acá arriba, discreto, para no competir con la acción
         # principal de abajo.
-        # En rojo: es la acción que cierra todo, conviene que se vea.
+        # En rosa: es la acción que cierra todo, conviene que se reconozca, pero
+        # sin un rojo lleno que compita con la acción principal.
         self.end_button = W.button(header, self.animator, "Terminar sesión",
-                                   self.app.on_end, tone="danger",
-                                   font=self.fonts["button"], height=28, width=130,
-                                   corner_radius=RADIUS["xs"])
+                                   self.app.on_end, tone="destructive",
+                                   font=self.fonts["button"], height=30, width=136)
         self.block_label = ctk.CTkLabel(header, text="", font=self.fonts["tiny"],
                                         text_color=COLORS["text_dim"])
         self.block_label.pack(side="right", padx=(SPACE["md"], 0), pady=(6, 0))
