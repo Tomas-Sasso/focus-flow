@@ -6,7 +6,12 @@ from PIL import Image, ImageDraw
 
 from .. import render as R
 from ..theme import COLORS, RADIUS
+from ..icons import paste_icon
 from ._base import PILCanvas, scaling_of
+
+# Cada sección con su ícono de icons.py (estilo SF Symbols).
+_SYMBOLS = {"Enfoque": "timer", "Historial": "calendar",
+            "Análisis": "chart", "Ajustes": "gear"}
 
 __all__ = [
     "NavRail", "SegmentedControl",
@@ -119,16 +124,16 @@ class NavRail(PILCanvas):
         scale = scaling_of(self)
         font = R.load_font(self.fonts.paths_bold, max(11, int(13 * scale)))
 
-        # --- indicador activo ---
+        # --- indicador activo: una cápsula, como la barra lateral de macOS 27 ---
         y = self.TOP + self._marker * self.ROW
-        panel = R.rounded_panel(width - 16, self.ROW - 6, RADIUS["sm"],
-                                self.background, COLORS["surface2"])
+        pill_h = self.ROW - 6
+        panel = R.rounded_panel(width - 16, pill_h, pill_h // 2,
+                                self.background, COLORS["surface3"])
         image.paste(panel, (8, int(round(y + 3))))
-        # barrita de acento a la izquierda
-        bar = R.rounded_panel(3, self.ROW - 20, 2, COLORS["surface2"], COLORS["accent"])
-        image.paste(bar, (12, int(round(y + 10))))
 
         draw = ImageDraw.Draw(image)
+        regular = R.load_font(self.fonts.paths, max(11, int(13 * scale)))
+        icon_size = 17 * scale
         for index, name in enumerate(self.items):
             row_y = self.TOP + index * self.ROW
             active = index == self._index
@@ -138,9 +143,16 @@ class NavRail(PILCanvas):
                 color = COLORS["text_muted"]
             else:
                 color = COLORS["text_dim"]
-            _draw_icon(draw, name, 34, row_y + self.ROW / 2, 15, color)
-            draw.text((56, row_y + self.ROW / 2), name, font=font, anchor="lm",
-                      fill=R.hex_to_rgb(color))
+            # Íconos siempre en acento, como en la barra lateral de Apple; el
+            # estado lo cuentan la cápsula y el peso del texto.
+            symbol = _SYMBOLS.get(name)
+            if symbol is not None:
+                paste_icon(image, symbol, (34, row_y + self.ROW / 2), icon_size,
+                           COLORS["accent"], anchor="mm")
+            else:
+                _draw_icon(draw, name, 34, row_y + self.ROW / 2, 15, color)
+            draw.text((56, row_y + self.ROW / 2), name, font=font if active else regular,
+                      anchor="lm", fill=R.hex_to_rgb(color))
         return image
 
 

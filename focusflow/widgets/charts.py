@@ -183,8 +183,11 @@ class GoalRing(PILCanvas):
 
     def render(self, width, height):
         side = max(80, min(width, height, int(self.max_size * scaling_of(self))))
+        # Margen para que el resplandor del arco no se corte en los bordes.
+        pad = max(3, int(side * 0.055 * 1.6))
         image = R.progress_ring(side, self.fraction, self.color, COLORS["surface2"],
-                                self.background, thickness=0.055, padding=3)
+                                self.background, thickness=0.055 * side / (side - 2 * pad),
+                                padding=pad, glow=0.2)
         ox, oy = (width - side) // 2, (height - side) // 2
         if (width, height) != (side, side):
             canvas = Image.new("RGB", (width, height), R.hex_to_rgb(self.background))
@@ -196,18 +199,28 @@ class GoalRing(PILCanvas):
         # El reloj y la leyenda se achican hasta entrar en el hueco del anillo:
         # "00:00:00" o una leyenda larga (tolerancia, pausa corta) se salían.
         clock = _fit_font(draw, self.primary, self.fonts.paths_bold,
-                          max(20, int(side * 0.215)), side * 0.64, 20)
+                          max(20, int(side * 0.2)), (side - 2 * pad) * 0.62, 20)
+        # La leyenda prueba en un renglón; si ni achicada entra, va en dos.
+        legend_width = (side - 2 * pad) * 0.64
+        legend_size = max(9, int(side * 0.056))
+        legend = [self.secondary] if self.secondary else []
         small = _fit_font(draw, self.secondary or "", self.fonts.paths,
-                          max(9, int(side * 0.056)), side * 0.66, 9)
+                          legend_size, legend_width, max(11, int(legend_size * 0.8)))
+        if legend and draw.textlength(legend[0], font=small) > legend_width:
+            legend = _split_in_two(legend[0])
+            small = _fit_font(draw, max(legend, key=len), self.fonts.paths,
+                              legend_size, legend_width, 9)
         badge_font = R.load_font(self.fonts.paths_bold, max(9, int(side * 0.052)))
 
         if self.badge:
             draw.text((cx, cy - side * 0.175), self.badge.upper(), font=badge_font,
                       anchor="mm", fill=R.hex_to_rgb(self.color))
-        draw.text((cx, cy), self.primary, font=clock, anchor="mm",
-                  fill=R.hex_to_rgb(COLORS["text"]))
-        if self.secondary:
-            draw.text((cx, cy + side * 0.155), self.secondary, font=small, anchor="mm",
+        # Cifras tabulares: el reloj no "baila" al cambiar los segundos.
+        R.draw_clock(image, (cx, cy), self.primary, clock, COLORS["text"])
+        line_h = small.size * 1.25
+        for i, line in enumerate(legend):
+            y = cy + side * 0.155 + (i - (len(legend) - 1) / 2) * line_h
+            draw.text((cx, y), line, font=small, anchor="mm",
                       fill=R.hex_to_rgb(COLORS["text_muted"]))
         return image
 
@@ -511,3 +524,12 @@ def _fit_font(draw, text, paths, size, max_width, min_size):
         font = R.load_font(paths, size)
         width = draw.textlength(text, font=font)
     return font
+
+
+def _split_in_two(text):
+    """Parte `text` en dos renglones por el espacio más cercano a la mitad."""
+    spaces = [i for i, c in enumerate(text) if c == " "]
+    if not spaces:
+        return [text]
+    cut = min(spaces, key=lambda i: abs(i - len(text) / 2))
+    return [text[:cut], text[cut + 1:]]
