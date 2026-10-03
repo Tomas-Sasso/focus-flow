@@ -146,6 +146,12 @@ DEFAULTS = {
     "floating_tab_minimized": False,
     "floating_tab_x": -1,          # -1 = todavía sin mover, va abajo a la derecha
     "floating_tab_y": -1,
+    # --- accesibilidad ---
+    # "auto" sigue a Windows; "on"/"off" mandan sobre el sistema.
+    "a11y_reduce_motion": "auto",
+    "a11y_reduce_transparency": "auto",
+    "a11y_increase_contrast": "auto",
+    "glass_tint": 50,              # 0 = ultra claro .. 100 = totalmente teñido
 }
 
 PRESETS = [
@@ -213,6 +219,11 @@ class Settings:
     def update(self, **values):
         self._data.update(values)
         self.save()
+
+    def stage(self, **values):
+        """Cambia en memoria sin escribir a disco (deslizadores mientras se
+        arrastran); el `save()` llega al soltar."""
+        self._data.update(values)
 
     def as_dict(self):
         return dict(self._data)

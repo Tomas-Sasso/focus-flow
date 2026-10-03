@@ -13,7 +13,12 @@ dist/
 *.spec
 
 # --- Tipografias propietarias de Apple (ver CREDITS.md) ---
+# SF Pro se puede poner en assets/ o assets/fonts/ para verla localmente, pero
+# su licencia no permite redistribuirla. Inter (assets/fonts/*.ttf) si se sube.
 assets/*.otf
+assets/**/SF-Pro*
+assets/**/SFPro*
+assets/**/SFUI*
 
 # --- Python ---
 __pycache__/

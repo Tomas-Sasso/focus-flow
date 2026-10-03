@@ -3,26 +3,45 @@
 El **código** de Focus Flow es MIT (ver [LICENSE](LICENSE)). Lo que sigue son los
 recursos que no son código propio.
 
-## Tipografías — NO se distribuyen en este repositorio
+## Tipografías
 
-La aplicación fue diseñada con las tipografías **SF Pro Text** y **SF UI Display**
-de Apple. Esas fuentes **no están incluidas acá**, y no pueden estarlo: la licencia
-de Apple permite usarlas para diseñar interfaces, pero no redistribuirlas.
+### Inter — incluida (SIL Open Font License 1.1)
 
-**No hace falta hacer nada.** El código ya lo contempla:
+La interfaz usa **[Inter 4.1](https://github.com/rsms/inter)**, de Rasmus Andersson
+y The Inter Project Authors, con licencia **SIL Open Font License 1.1** (OFL). La
+OFL permite empaquetarla y redistribuirla junto con el programa, siempre que la
+licencia viaje con ella y la tipografía no se venda sola.
 
-- `focusflow/theme.py` registra cada `.otf` sólo `if os.path.exists(path)`, y
-  después resuelve la familia con una cadena de alternativas que termina en
-  **Segoe UI**.
-- `focusflow/render.py` (`load_font`) intenta los `.otf`, después `segoeui.ttf`,
-  después `arial.ttf`, y por último la tipografía por defecto de Pillow.
+En `assets/fonts/` van los siete TrueType estáticos con *hinting* para ClearType
+(de `extras/ttf/` del paquete oficial) y la licencia completa:
 
-Es decir: sin las fuentes de Apple la aplicación funciona igual, con Segoe UI.
+| archivo | uso |
+|---|---|
+| `Inter-Regular.ttf` | texto general |
+| `Inter-Medium.ttf` | botones, navegación, controles |
+| `Inter-SemiBold.ttf` | títulos de tarjeta, valores, énfasis |
+| `Inter-Bold.ttf` | énfasis fuerte |
+| `InterDisplay-Medium.ttf`, `InterDisplay-SemiBold.ttf`, `InterDisplay-Bold.ttf` | tamaños de 20 px para arriba: títulos, cifras, reloj |
+| `LICENSE.txt` | texto de la OFL 1.1 (obligatorio al redistribuir) |
 
-Si querés el aspecto original y ya tenés licencia para usarlas, poné los archivos
-`SF-Pro-Text-Regular.otf`, `SF-Pro-Text-Medium.otf`, `SF-Pro-Text-Semibold.otf` y
-`SFUIDisplay-Regular.otf` en `assets/`. El `.gitignore` los excluye para que no
-terminen subidos por accidente.
+En Windows se registran sólo para el proceso (`AddFontResourceExW` con
+`FR_PRIVATE`): no se instalan en el sistema ni quedan después de cerrar.
+
+### SF Pro — opcional, sólo en tu máquina
+
+Si la encuentra, la app usa **SF Pro** de Apple antes que Inter: bajala de
+[developer.apple.com/fonts](https://developer.apple.com/fonts/) y copiá los
+archivos (`SF-Pro-Text-*.otf`, `SF-Pro-Display-*.otf` o la variable `SF-Pro.ttf`;
+también sirven los nombres viejos como `SFUIDisplay-Regular.otf`) a `assets/` o
+`assets/fonts/`. Su licencia **no permite redistribuirla**: por eso no está en el
+repositorio ni en los instaladores, el `.gitignore` la excluye, y no hay que
+dejarla adentro de un ejecutable que se vaya a compartir.
+
+### Si no hay ninguna
+
+`focusflow/theme.py` (`Typography`) resuelve en este orden: SF Pro (si está en
+`assets/`) → Inter empaquetada → Segoe UI Variable → Segoe UI. Sin Inter ni SF
+la aplicación funciona igual con las de Windows.
 
 ## Sonidos
 
