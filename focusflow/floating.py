@@ -64,6 +64,9 @@ class FloatingTab:
         self.label = "Sin sesión"
         self.color = COLORS["surface3"]
         self.time_text = "00:00"
+        # Lo lee _size_for antes del primer update_from: sin esto, arrancar con la
+        # pestaña activada y minimizada tiraba AttributeError.
+        self.compact_text = "—"
         self.fraction = 0.0
         self.running = False
 

@@ -193,8 +193,12 @@ class GoalRing(PILCanvas):
 
         draw = ImageDraw.Draw(image)
         cx, cy = ox + side / 2, oy + side / 2
-        clock = R.load_font(self.fonts.paths_bold, max(20, int(side * 0.215)))
-        small = R.load_font(self.fonts.paths, max(9, int(side * 0.056)))
+        # El reloj y la leyenda se achican hasta entrar en el hueco del anillo:
+        # "00:00:00" o una leyenda larga (tolerancia, pausa corta) se salían.
+        clock = _fit_font(draw, self.primary, self.fonts.paths_bold,
+                          max(20, int(side * 0.215)), side * 0.64, 20)
+        small = _fit_font(draw, self.secondary or "", self.fonts.paths,
+                          max(9, int(side * 0.056)), side * 0.66, 9)
         badge_font = R.load_font(self.fonts.paths_bold, max(9, int(side * 0.052)))
 
         if self.badge:
@@ -494,3 +498,16 @@ class Heatmap(PILCanvas):
         if seconds <= 0:
             return f"{day.strftime('%d/%m/%Y')} · sin sesiones"
         return f"{day.strftime('%d/%m/%Y')} · {fmt_short(seconds)} concentrado"
+
+
+def _fit_font(draw, text, paths, size, max_width, min_size):
+    """La fuente más grande (hasta `size`) con la que `text` no pasa `max_width`."""
+    font = R.load_font(paths, size)
+    if not text:
+        return font
+    width = draw.textlength(text, font=font)
+    while width > max_width and size > min_size:
+        size = max(min_size, min(size - 1, int(size * max_width / width)))
+        font = R.load_font(paths, size)
+        width = draw.textlength(text, font=font)
+    return font

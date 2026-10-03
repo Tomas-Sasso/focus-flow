@@ -5,7 +5,7 @@ from __future__ import annotations
 import customtkinter as ctk
 
 from .. import render as R
-from ..theme import COLORS, RADIUS
+from ..theme import COLORS
 
 __all__ = [
     "SmoothButton", "TONES", "button",
@@ -24,9 +24,10 @@ class SmoothButton(ctk.CTkButton):
                  press_depth=0.12, **kwargs):
         base_color = base_color or kwargs.get("fg_color") or COLORS["accent"]
         kwargs.setdefault("fg_color", base_color)
-        kwargs.setdefault("corner_radius", RADIUS["sm"])
         kwargs.setdefault("border_width", 0)
         kwargs.setdefault("height", 38)
+        # Cápsula, como los botones de Apple: radio = media altura.
+        kwargs.setdefault("corner_radius", kwargs["height"] // 2)
         kwargs["hover"] = False
         super().__init__(master, **kwargs)
         self.animator = animator

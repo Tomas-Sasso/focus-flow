@@ -240,7 +240,7 @@ class FocusFlowApp:
         footer.grid(row=3, column=0, sticky="ew", padx=SPACE["md"],
                     pady=(0, SPACE["xl"]))
         self.tab_button = W.button(footer, self.animator, "Activar pestaña flotante",
-                                   self.toggle_floating_tab, tone="orange",
+                                   self.toggle_floating_tab, tone="ghost",
                                    font=self.fonts["button"], height=38,
                                    corner_radius=RADIUS["sm"])
         self.tab_button.pack(fill="x")
@@ -305,7 +305,9 @@ class FocusFlowApp:
         activa = self.settings["floating_tab"]
         self.tab_button.configure(
             text="Desactivar pestaña flotante" if activa else "Activar pestaña flotante")
-        tone = "yellow" if activa else "orange"
+        # Neutro en los dos estados: el texto ya dice cuál es, y un naranja
+        # le robaba protagonismo a "Comenzar sesión".
+        tone = "quiet" if activa else "ghost"
         fill, hover, text_key = W.TONES[tone]
         self.tab_button.set_base_color(COLORS[fill], COLORS[hover])
         self.tab_button.configure(text_color=COLORS[text_key])
