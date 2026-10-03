@@ -10,10 +10,11 @@ from datetime import date, datetime
 import customtkinter as ctk
 
 from . import engine as E
+from . import render as R
 from . import stats
 from . import widgets as W
 from .anim import Animator
-from .config import (APP_NAME, APP_TAGLINE, BASE_DIR, PRESETS, RECOVERY_PATH,
+from .config import (APP_NAME, BASE_DIR, PRESETS, RECOVERY_PATH,
                      Settings)
 from .db import Database
 from .floating import FloatingTab
@@ -225,11 +226,13 @@ class FocusFlowApp:
         brand = ctk.CTkFrame(sidebar, fg_color="transparent")
         brand.grid(row=0, column=0, sticky="ew", padx=SPACE["xl"],
                    pady=(SPACE["2xl"], SPACE["xl"]))
-        ctk.CTkLabel(brand, text=APP_NAME, font=self.fonts["title"],
-                     text_color=COLORS["text"]).pack(anchor="w")
-        ctk.CTkLabel(brand, text=APP_TAGLINE, font=self.fonts["micro"],
-                     text_color=COLORS["text_faint"], wraplength=SIDEBAR_WIDTH - 60,
-                     justify="left").pack(anchor="w", pady=(2, 0))
+        # Marca como en una barra lateral de Apple: el anillo de la app al lado del
+        # nombre, sin bajada (la frase de la app queda en el splash).
+        logo = R.progress_ring(72, 0.78, COLORS["accent"], COLORS["surface3"],
+                               COLORS["sidebar"], thickness=0.16, padding=4)
+        self._logo = ctk.CTkImage(light_image=logo, dark_image=logo, size=(24, 24))
+        ctk.CTkLabel(brand, text=f"  {APP_NAME}", image=self._logo, compound="left",
+                     font=self.fonts["title"], text_color=COLORS["text"]).pack(anchor="w")
 
         self.nav = W.NavRail(sidebar, self.animator, self.fonts, VIEWS,
                              command=self.show_view, width=SIDEBAR_WIDTH)
@@ -239,11 +242,18 @@ class FocusFlowApp:
         footer = ctk.CTkFrame(sidebar, fg_color="transparent")
         footer.grid(row=3, column=0, sticky="ew", padx=SPACE["md"],
                     pady=(0, SPACE["xl"]))
-        self.tab_button = W.button(footer, self.animator, "Activar pestaña flotante",
-                                   self.toggle_floating_tab, tone="ghost",
-                                   font=self.fonts["button"], height=38,
-                                   corner_radius=RADIUS["sm"])
-        self.tab_button.pack(fill="x")
+        # Un interruptor, como en Ajustes de macOS: dice el estado sin tener que leer
+        # un botón que cambia de texto.
+        tab_row = ctk.CTkFrame(footer, fg_color="transparent")
+        tab_row.pack(fill="x", padx=(SPACE["xs"], 0))
+        ctk.CTkLabel(tab_row, text="Pestaña flotante", font=self.fonts["body"],
+                     text_color=COLORS["text"]).pack(side="left")
+        self.tab_switch = ctk.CTkSwitch(
+            tab_row, text="", width=40, switch_width=36, switch_height=20,
+            fg_color=COLORS["surface3"], progress_color=COLORS["accent"],
+            button_color=COLORS["text"], button_hover_color=COLORS["text"],
+            command=self.toggle_floating_tab)
+        self.tab_switch.pack(side="right")
 
         self.volume = W.VolumeControl(footer, self.fonts, self.settings,
                                       self._on_volume_change,
@@ -302,15 +312,11 @@ class FocusFlowApp:
             self.tab.sync_visibility()
 
     def _refresh_tab_button(self):
-        activa = self.settings["floating_tab"]
-        self.tab_button.configure(
-            text="Desactivar pestaña flotante" if activa else "Activar pestaña flotante")
-        # Neutro en los dos estados: el texto ya dice cuál es, y un naranja
-        # le robaba protagonismo a "Comenzar sesión".
-        tone = "quiet" if activa else "ghost"
-        fill, hover, text_key = W.TONES[tone]
-        self.tab_button.set_base_color(COLORS[fill], COLORS[hover])
-        self.tab_button.configure(text_color=COLORS[text_key])
+        # select/deselect no llaman al command, así que no hay vuelta en círculo.
+        if self.settings["floating_tab"]:
+            self.tab_switch.select()
+        else:
+            self.tab_switch.deselect()
 
     def toggle_floating_tab(self):
         activa = not self.settings["floating_tab"]
